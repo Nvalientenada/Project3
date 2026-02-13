@@ -32,6 +32,25 @@ Several design alternatives were considered during development:
 
 ---
 
+## How the Timing and Motion Settings Work 
+
+- **Main loop update rate:** The program updates about every **10 ms** (LOOP_MS = 10). This makes the system responsive to button presses and knob changes.
+- **Buzzer duration:** If ignition is inhibited, the buzzer is turned on for about **0.5 seconds** (BUZZ_MS = 500 ms).
+- **Servo control signal:** The servo is controlled using PWM at **50 Hz** (typical servo frequency). The code changes the PWM “duty value” to move the servo.
+- **Wiper motion range:** The wiper sweeps between **0° (parked)** and about **90°** to model a realistic wiper movement.
+- **Low vs High speed:** The servo moves in small steps every loop:
+  - **LOW** mode uses a smaller step (LO_STEP = 2), so it sweeps more slowly.
+  - **HIGH** mode uses a larger step (HI_STEP = 5), so it sweeps faster.
+- **Intermittent (INT) delays:** In INT mode, the wiper does one sweep and then pauses at 0°. The pause time depends on where the knob is within the INT region:
+  - **SHORT ≈ 1 second**
+  - **MED ≈ 3 seconds**
+  - **LONG ≈ 5 seconds**
+- **Potentiometer mode selection:** The knob is read as an ADC value from **0 to 4095**, and that range is split into four regions:
+  - **OFF**, **INT**, **LOW**, **HIGH**
+  This makes it easy for the user to select a mode by turning the knob.
+
+---
+
 ## Testing Results Summary
 
 ### Ignition Subsystem
